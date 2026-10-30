@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* Design tokens — the one place for colour, type, radius and shadow.
+   Utilities follow from them: bg-brand, text-ink-muted, rounded-panel, shadow-panel… */
+@theme {
+  --color-brand: #0f766e; /* overridden per project by project.json theme.brand */
+  --color-ink: #0f172a;
+  --color-ink-muted: #64748b;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-line: #e2e8f0;
+  --color-stage: #e5e7eb;
+  --color-focus: #2563eb;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --radius-control: 0.625rem;
+  --radius-panel: 1rem;
+  --shadow-panel: 0 8px 30px rgb(15 23 42 / 0.12);
+}
+
+html,
+body {
+  height: 100%;
+  color: var(--color-ink);
+  background: var(--color-stage);
+  overscroll-behavior: none;
+}
+
+@layer base {
+  /* In the base layer, so utilities (outline-none…) can still override it. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  /* SVG hotspots never get the browser's outline: Chrome draws it around the
+     polygon's bounding box (also on a mouse click), and the zoomed map scales
+     it into a huge black-and-white box. Keyboard focus is the polygon's stroke. */
+  .hotspot,
+  .hotspot:focus {
+    outline: none;
+  }
+  .hotspot:focus-visible {
+    stroke: var(--color-focus);
+    stroke-width: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

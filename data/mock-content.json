@@ -1,0 +1,13 @@
+{
+  "scenes": {
+    "masterplan": { "title": "Masterplan · Phase 1–3" }
+  },
+  "hotspots": {
+    "masterplan/A-003": {
+      "info": { "description": "Business park — register your interest; launch Q1 2029." }
+    },
+    "zone-1/A-001": {
+      "info": { "image": "/projects/new-project/card-building-1.webp" }
+    }
+  }
+}
