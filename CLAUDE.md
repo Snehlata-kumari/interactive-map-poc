@@ -1,14 +1,30 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 @AGENTS.md
 
 Reusable interactive-map viewer (Next.js 16, React 19, Tailwind 4). README.md is the non-developer guide: keep it in sync with any change to the data format or env.
 
 ## Commands
 
-`npm run dev` · `npm run build` · `npm run lint` · `npm run type-check` · `npm run import-editor -- <backup.json>` (SVG editor backup → `data/project.json` + `public/projects/<slug>/*.webp`; on re-import only geometry is replaced, all other data is kept by id). No test suite.
+`npm run dev` · `npm run build` · `npm run lint` · `npm run type-check` · `npm run import-editor -- <backup.json>` (SVG editor backup → `data/project.json` + `public/projects/<slug>/*.webp`; on re-import only geometry is replaced, all other data is kept by id). No test suite. Verify with `npm run lint && npm run type-check`; check data problems in the dev browser console (`[project.json] … problem(s)`). The import script backs up the old file to `data/project.previous.json`.
 
 The shipped project is the editor export `~/Downloads/new-project.json` + its Excel data (titles, statuses, prices, cards). `data/mock-*.json` are the BFF's stand-in upstreams.
+
+## Handover / switching projects
+
+`HANDOVER.md` holds copy-paste prompts for a non-technical maintainer. Keep it in sync with the import flow. When following those prompts, use plain language, show a plan before bulk data edits, and never push without asking.
+
+To replace the project: **first** move `data/project.json` and `public/projects/<slug>/` into `archive/<slug>/`, **then** run `import-editor`. If an old `project.json` exists, the importer keeps its `name`, `theme`, `categories` and `values`, plus all non-geometry data for matching ids, so old data would end up in the new project. After a clean import, `categories`/`values` are empty and plots render grey until they are defined. `data/mock-*.json` are keyed to the old ids. Excel data has no importer: map the columns to `categories` / `values` / `info` by hand, matching rows to hotspot ids, and confirm the mapping with the user first.
+
+## Data flow
+
+`NEXT_PUBLIC_CONTENT_SOURCE` (`lib/config.ts`, inlined at build; see `.env.example`) picks the mode:
+
+- `local` (default): `ProjectProvider` uses the bundled `data/project.json`. No server code runs, so this mode must keep working on static hosting.
+- `api`: `ProjectProvider` fetches `/api/project` (server: `applyPatch(project.json, normalizeContent(upstream))`, cached 60 s). If that fails it falls back to the bundled JSON. It polls `/api/units` every `UNITS_REFRESH_MS`.
+- Units are merged on the client per scene in `SceneView` (`withUnits`): text fields become categories and number fields become values. `checkProject` runs only in dev. `theme.brand` sets `--color-brand` at runtime.
 
 ## Rules
 

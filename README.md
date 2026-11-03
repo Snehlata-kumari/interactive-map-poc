@@ -4,6 +4,9 @@ A reusable "zoom into the map" viewer for real-estate sales: city → masterplan
 phase → plot → floor plan. A new project is **new images + a new
 `data/project.json`**. You don't need new code or new pages.
 
+> **Not a developer?** Use [HANDOVER.md](HANDOVER.md): copy-paste prompts for
+> Claude Code that cover every task, from setup to swapping in a new project.
+
 ```bash
 npm install
 npm run dev          # http://localhost:3000
