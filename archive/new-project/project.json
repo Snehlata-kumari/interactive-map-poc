@@ -1,0 +1,1171 @@
+{
+ "name": "New Project",
+ "rootScene": "overview",
+ "theme": {
+  "brand": "#0f766e"
+ },
+ "categories": {
+  "status": {
+   "label": "Status",
+   "options": [
+    {
+     "value": "available",
+     "label": "Available",
+     "color": "#70C50F"
+    },
+    {
+     "value": "reserved",
+     "label": "Reserved",
+     "color": "#5486E7"
+    },
+    {
+     "value": "sold",
+     "label": "Sold",
+     "color": "#E75454"
+    },
+    {
+     "value": "coming-soon",
+     "label": "Coming soon",
+     "color": "#A3A3A3"
+    }
+   ]
+  },
+  "typology": {
+   "label": "Typology",
+   "options": [
+    {
+     "value": "villa-4br",
+     "label": "Villa · 4 bedrooms",
+     "color": "#AA6CA4"
+    },
+    {
+     "value": "villa-5br",
+     "label": "Villa · 5 bedrooms",
+     "color": "#6896CC"
+    }
+   ]
+  },
+  "zone-type": {
+   "label": "Zone type",
+   "options": [
+    {
+     "value": "residential",
+     "label": "Residential",
+     "color": "#AA6CA4"
+    },
+    {
+     "value": "mixed-use",
+     "label": "Mixed use",
+     "color": "#6896CC"
+    },
+    {
+     "value": "commercial",
+     "label": "Commercial",
+     "color": "#E0A84F"
+    }
+   ]
+  },
+  "floor-use": {
+   "label": "Floor use",
+   "options": [
+    {
+     "value": "living",
+     "label": "Living",
+     "color": "#4FB3A9"
+    },
+    {
+     "value": "bedrooms",
+     "label": "Bedrooms",
+     "color": "#7E7EC8"
+    }
+   ]
+  }
+ },
+ "values": {
+  "area": {
+   "label": "Area",
+   "unit": "m²"
+  },
+  "gfa": {
+   "label": "GFA",
+   "unit": "m²"
+  },
+  "price-from": {
+   "label": "Price from",
+   "unit": "AED"
+  },
+  "bedrooms": {
+   "label": "Bedrooms"
+  }
+ },
+ "scenes": [
+  {
+   "id": "overview",
+   "title": "World",
+   "image": "/projects/new-project/overview.webp",
+   "size": [
+    2312,
+    1536
+   ],
+   "hotspotStyle": "outline",
+   "hotspots": [
+    {
+     "id": "A-001",
+     "label": "India",
+     "points": [
+      [
+       67.32,
+       50.16
+      ],
+      [
+       67.58,
+       50.29
+      ],
+      [
+       67.63,
+       50.55
+      ],
+      [
+       67.8,
+       50.68
+      ],
+      [
+       67.76,
+       50.88
+      ],
+      [
+       67.84,
+       50.94
+      ],
+      [
+       67.93,
+       51.6
+      ],
+      [
+       67.71,
+       51.79
+      ],
+      [
+       67.67,
+       52.12
+      ],
+      [
+       67.84,
+       52.38
+      ],
+      [
+       68.27,
+       52.57
+      ],
+      [
+       68.19,
+       52.96
+      ],
+      [
+       68.19,
+       53.42
+      ],
+      [
+       68.27,
+       53.55
+      ],
+      [
+       69.4,
+       54.26
+      ],
+      [
+       69.44,
+       53.94
+      ],
+      [
+       69.75,
+       54.07
+      ],
+      [
+       70.05,
+       53.81
+      ],
+      [
+       70.26,
+       53.81
+      ],
+      [
+       70.39,
+       53.87
+      ],
+      [
+       70.48,
+       54.26
+      ],
+      [
+       70.7,
+       54.33
+      ],
+      [
+       70.65,
+       54.66
+      ],
+      [
+       70.26,
+       54.59
+      ],
+      [
+       70.35,
+       54.85
+      ],
+      [
+       70.22,
+       55.11
+      ],
+      [
+       70.26,
+       56.02
+      ],
+      [
+       70,
+       56.28
+      ],
+      [
+       70.05,
+       56.74
+      ],
+      [
+       69.92,
+       56.87
+      ],
+      [
+       69.92,
+       57.19
+      ],
+      [
+       69.4,
+       57.59
+      ],
+      [
+       68.66,
+       58.69
+      ],
+      [
+       68.71,
+       58.82
+      ],
+      [
+       69.57,
+       58.82
+      ],
+      [
+       69.61,
+       59.08
+      ],
+      [
+       68.58,
+       59.08
+      ],
+      [
+       68.45,
+       58.89
+      ],
+      [
+       68.32,
+       59.15
+      ],
+      [
+       68.19,
+       59.15
+      ],
+      [
+       68.06,
+       59.41
+      ],
+      [
+       68.1,
+       60.51
+      ],
+      [
+       68.02,
+       61.3
+      ],
+      [
+       67.84,
+       61.36
+      ],
+      [
+       67.84,
+       61.62
+      ],
+      [
+       67.54,
+       62.01
+      ],
+      [
+       67.5,
+       62.27
+      ],
+      [
+       67.11,
+       62.14
+      ],
+      [
+       67.06,
+       61.43
+      ],
+      [
+       66.89,
+       61.17
+      ],
+      [
+       66.29,
+       61.17
+      ],
+      [
+       66.29,
+       60.91
+      ],
+      [
+       66.85,
+       60.91
+      ],
+      [
+       66.2,
+       58.89
+      ],
+      [
+       66.2,
+       58.5
+      ],
+      [
+       66.03,
+       58.3
+      ],
+      [
+       66.16,
+       57.72
+      ],
+      [
+       66.37,
+       57.72
+      ],
+      [
+       66.5,
+       57.26
+      ],
+      [
+       66.33,
+       57.06
+      ],
+      [
+       66.2,
+       57.39
+      ],
+      [
+       66.07,
+       57.39
+      ],
+      [
+       65.98,
+       56.74
+      ],
+      [
+       65.68,
+       57
+      ],
+      [
+       65.38,
+       56.93
+      ],
+      [
+       65.07,
+       56.41
+      ],
+      [
+       65.07,
+       56.22
+      ],
+      [
+       65.33,
+       56.15
+      ],
+      [
+       65.03,
+       56.09
+      ],
+      [
+       65.03,
+       55.7
+      ],
+      [
+       64.68,
+       55.57
+      ],
+      [
+       64.77,
+       55.37
+      ],
+      [
+       64.73,
+       55.05
+      ],
+      [
+       64.81,
+       54.98
+      ],
+      [
+       64.73,
+       54.72
+      ],
+      [
+       65.07,
+       54.98
+      ],
+      [
+       65.12,
+       54.85
+      ],
+      [
+       65.68,
+       54.66
+      ],
+      [
+       65.68,
+       54.46
+      ],
+      [
+       65.51,
+       54.26
+      ],
+      [
+       65.51,
+       53.94
+      ],
+      [
+       65.85,
+       53.74
+      ],
+      [
+       66.16,
+       53.29
+      ],
+      [
+       66.03,
+       53.09
+      ],
+      [
+       65.85,
+       53.22
+      ],
+      [
+       65.77,
+       52.9
+      ],
+      [
+       65.85,
+       52.77
+      ],
+      [
+       65.98,
+       52.96
+      ],
+      [
+       66.03,
+       52.83
+      ],
+      [
+       66.41,
+       52.77
+      ],
+      [
+       66.37,
+       52.57
+      ],
+      [
+       66.07,
+       52.51
+      ],
+      [
+       66.07,
+       52.18
+      ],
+      [
+       66.63,
+       52.25
+      ],
+      [
+       66.5,
+       51.99
+      ],
+      [
+       66.5,
+       51.6
+      ],
+      [
+       66.59,
+       51.53
+      ],
+      [
+       66.5,
+       51.27
+      ],
+      [
+       66.8,
+       51.2
+      ],
+      [
+       66.54,
+       51.01
+      ],
+      [
+       66.41,
+       50.49
+      ],
+      [
+       66.67,
+       50.49
+      ],
+      [
+       66.63,
+       50.75
+      ],
+      [
+       67.02,
+       50.75
+      ]
+     ],
+     "link": "india"
+    }
+   ]
+  },
+  {
+   "id": "india",
+   "parent": "overview",
+   "title": "India",
+   "image": "/projects/new-project/india.webp",
+   "size": [
+    4000,
+    6000
+   ],
+   "markers": [
+    {
+     "id": "A-001",
+     "point": [
+      47.23,
+      33.26
+     ],
+     "label": "Masterplan",
+     "link": "masterplan"
+    }
+   ],
+  
+ 
+   "hotspotStyle": "fill",
+   "hotspots": [
+    {
+     "id": "A-001",
+     "label": "Masterplan",
+     "points": [
+      [
+       45.23,
+       33.26
+      ],
+      [
+       45.12,
+       35.6
+      ],
+      [
+       50.32,
+       35.45
+      ],
+      [
+       49.36,
+       32.7
+      ]
+     ],
+     "link": "masterplan"
+    }
+   ]
+  },
+  {
+   "id": "masterplan",
+   "parent": "india",
+   "title": "Masterplan",
+   "image": "/projects/new-project/masterplan.webp",
+   "size": [
+    4000,
+    2250
+   ],
+   "hotspotStyle": "fill",
+   "hotspots": [
+    {
+     "id": "A-001",
+     "label": "Zone 1",
+     "points": [
+      [
+       0.23,
+       37.2
+      ],
+      [
+       13.78,
+       50.54
+      ],
+      [
+       17.53,
+       52.04
+      ],
+      [
+       20.37,
+       45.92
+      ],
+      [
+       20.44,
+       39.11
+      ],
+      [
+       18.53,
+       31.76
+      ],
+      [
+       17.23,
+       25.63
+      ],
+      [
+       14.24,
+       22.5
+      ],
+      [
+       8.27,
+       27.68
+      ],
+      [
+       3.98,
+       32.44
+      ]
+     ],
+     "link": "zone-1",
+     "categories": {
+      "status": "available",
+      "zone-type": "residential"
+     },
+     "values": {
+      "area": 185000,
+      "price-from": 2450000
+     },
+     "info": {
+      "subtitle": "Phase 1",
+      "image": "/projects/new-project/card-zone-1.webp",
+      "description": "Waterfront district of villas and townhouses around a central park.",
+      "rows": [
+       {
+        "label": "Units",
+        "value": "120"
+       },
+       {
+        "label": "Completion",
+        "value": "Q4 2027"
+       }
+      ],
+      "cta": {
+       "label": "Enquire",
+       "href": "https://example.com/enquire"
+      }
+     }
+    },
+    {
+     "id": "A-002",
+     "label": "Zone 2",
+     "points": [
+      [
+       48.85,
+       32.44
+      ],
+      [
+       65.47,
+       70.15
+      ],
+      [
+       79.25,
+       58.98
+      ],
+      [
+       67.69,
+       33.39
+      ],
+      [
+       65.47,
+       34.35
+      ],
+      [
+       61.56,
+       25.63
+      ]
+     ],
+     "categories": {
+      "status": "reserved",
+      "zone-type": "mixed-use"
+     },
+     "values": {
+      "area": 142000,
+      "price-from": 3100000
+     },
+     "info": {
+      "subtitle": "Phase 2",
+      "image": "/projects/new-project/card-masterplan.webp",
+      "description": "Retail boulevard with apartments above — fully reserved.",
+      "rows": [
+       {
+        "label": "Units",
+        "value": "86"
+       },
+       {
+        "label": "Completion",
+        "value": "Q2 2028"
+       }
+      ]
+     }
+    },
+    {
+     "id": "A-003",
+     "label": "Zone 3",
+     "points": [
+      [
+       23.97,
+       57.76
+      ],
+      [
+       6.89,
+       90.56
+      ],
+      [
+       13.71,
+       99.82
+      ],
+      [
+       27.72,
+       88.93
+      ],
+      [
+       25.8,
+       79.13
+      ],
+      [
+       27.03,
+       76.54
+      ],
+      [
+       28.41,
+       76.68
+      ],
+      [
+       29.17,
+       78.72
+      ],
+      [
+       28.1,
+       83.08
+      ],
+      [
+       29.33,
+       88.52
+      ],
+      [
+       47.32,
+       74.09
+      ],
+      [
+       44.87,
+       67.83
+      ]
+     ],
+     "categories": {
+      "status": "coming-soon",
+      "zone-type": "commercial"
+     },
+     "values": {
+      "area": 96000
+     },
+     "info": {
+      "subtitle": "Phase 3",
+      "image": "/projects/new-project/card-masterplan.webp",
+      "description": "Business park — launching soon.",
+      "rows": [
+       {
+        "label": "Units",
+        "value": "40"
+       },
+       {
+        "label": "Completion",
+        "value": "2029"
+       }
+      ],
+      "cta": {
+       "label": "Enquire",
+       "href": "https://example.com/enquire"
+      }
+     }
+    }
+   ],
+   "colorBy": "status",
+   "filters": {
+    "categories": [
+     "status",
+     "zone-type"
+    ],
+    "ranges": [
+     "area",
+     "price-from"
+    ],
+    "search": true
+   }
+  },
+  {
+   "id": "building-1",
+   "parent": "zone-1",
+   "title": "Building 1",
+   "image": "/projects/new-project/building-1.webp",
+   "size": [
+    3901,
+    2926
+   ],
+   "hotspotStyle": "fill",
+   "hotspots": [
+    {
+     "id": "A-003",
+     "label": "First floor",
+     "points": [
+      [
+       25.06,
+       42.8
+      ],
+      [
+       25.15,
+       35.11
+      ],
+      [
+       30.83,
+       30.65
+      ],
+      [
+       32.32,
+       30.77
+      ],
+      [
+       33.06,
+       29.78
+      ],
+      [
+       36.69,
+       30.52
+      ],
+      [
+       40.32,
+       27.54
+      ],
+      [
+       40.32,
+       24.81
+      ],
+      [
+       50.37,
+       17.25
+      ],
+      [
+       52.14,
+       17.37
+      ],
+      [
+       52.14,
+       21.96
+      ],
+      [
+       56.92,
+       19.02
+      ],
+      [
+       57.82,
+       19.23
+      ],
+      [
+       85.55,
+       27.79
+      ],
+      [
+       86.11,
+       43.3
+      ],
+      [
+       87.22,
+       43.42
+      ],
+      [
+       87.22,
+       49.38
+      ],
+      [
+       55.49,
+       46.15
+      ],
+      [
+       45.72,
+       47.89
+      ],
+      [
+       45.63,
+       45.41
+      ]
+     ],
+     "link": "first-floor",
+     "categories": {
+      "floor-use": "bedrooms"
+     },
+     "values": {
+      "area": 304.6,
+      "bedrooms": 2
+     },
+     "info": {
+      "image": "/projects/new-project/card-first-floor.webp",
+      "description": "Two bedroom suites, family lounge and a wrap-around terrace."
+     }
+    },
+    {
+     "id": "A-004",
+     "label": "Ground floor",
+     "points": [
+      [
+       4.68,
+       69.48
+      ],
+      [
+       5.52,
+       41.19
+      ],
+      [
+       45.63,
+       45.41
+      ],
+      [
+       45.72,
+       47.89
+      ],
+      [
+       50.84,
+       48.51
+      ],
+      [
+       50.84,
+       48.51
+      ],
+      [
+       56.14,
+       47.52
+      ],
+      [
+       82.2,
+       50.12
+      ],
+      [
+       76.62,
+       51.12
+      ],
+      [
+       76.24,
+       65.14
+      ]
+     ],
+     "link": "ground-floor",
+     "categories": {
+      "floor-use": "living"
+     },
+     "values": {
+      "area": 305,
+      "bedrooms": 3
+     },
+     "info": {
+      "image": "/projects/new-project/card-ground-floor.webp",
+      "description": "Open living, kitchen and dining, three bedrooms and a two-car garage.",
+      "rows": [
+       {
+        "label": "Parking",
+        "value": "2"
+       }
+      ]
+     }
+    }
+   ],
+   "colorBy": "floor-use",
+   "filters": {
+    "categories": [
+     "floor-use"
+    ],
+    "ranges": [
+     "area",
+     "bedrooms"
+    ],
+    "search": true
+   }
+  },
+  {
+   "id": "ground-floor",
+   "parent": "building-1",
+   "title": "Ground floor",
+   "image": "/projects/new-project/ground-floor.webp",
+   "size": [
+    4104,
+    4104
+   ],
+   "fit": "contain"
+  },
+  {
+   "id": "first-floor",
+   "parent": "building-1",
+   "title": "First floor",
+   "image": "/projects/new-project/first-floor.webp",
+   "size": [
+    1024,
+    731
+   ],
+   "fit": "contain"
+  },
+  {
+   "id": "zone-1",
+   "parent": "masterplan",
+   "title": "Zone 1",
+   "image": "/projects/new-project/zone-1.webp",
+   "size": [
+    3465,
+    2131
+   ],
+   "hotspotStyle": "fill",
+   "hotspots": [
+    {
+     "id": "A-001",
+     "label": "Building 2",
+     "points": [
+      [
+       42.27,
+       78.39
+      ],
+      [
+       45.33,
+       82.99
+      ],
+      [
+       51.84,
+       79.38
+      ],
+      [
+       48.55,
+       75.27
+      ]
+     ],
+     "categories": {
+      "status": "sold",
+      "typology": "villa-4br"
+     },
+     "values": {
+      "area": 800,
+      "price-from": 3490000,
+      "bedrooms": 4
+     },
+     "info": {
+      "description": "Sold — floor plans available on request.",
+      "rows": [
+       {
+        "label": "Plot",
+        "value": "MT01-V4-021"
+       },
+       {
+        "label": "GFA",
+        "value": "532.9 m²"
+       },
+       {
+        "label": "Parking",
+        "value": "2"
+       },
+       {
+        "label": "Facade",
+        "value": "Type 1"
+       },
+       {
+        "label": "Completion",
+        "value": "Q4 2027"
+       }
+      ]
+     }
+    },
+    {
+     "id": "A-002",
+     "label": "Building 1",
+     "points": [
+      [
+       14.55,
+       83.86
+      ],
+      [
+       15.47,
+       88.35
+      ],
+      [
+       24.73,
+       84.61
+      ],
+      [
+       23.12,
+       80.01
+      ]
+     ],
+     "link": "building-1",
+     "categories": {
+      "status": "available",
+      "typology": "villa-5br"
+     },
+     "values": {
+      "area": 900,
+      "price-from": 4150000,
+      "bedrooms": 5
+     },
+     "info": {
+      "image": "/projects/new-project/card-building-1.webp",
+      "description": "Two-storey villa with pool, garden and a two-car garage.",
+      "rows": [
+       {
+        "label": "Plot",
+        "value": "MT01-V5-002"
+       },
+       {
+        "label": "GFA",
+        "value": "609.6 m²"
+       },
+       {
+        "label": "Parking",
+        "value": "2"
+       },
+       {
+        "label": "Facade",
+        "value": "Type 1"
+       },
+       {
+        "label": "Completion",
+        "value": "Q4 2027"
+       }
+      ],
+      "cta": {
+       "label": "Enquire",
+       "href": "https://example.com/enquire"
+      }
+     }
+    }
+   ],
+   "colorBy": "status",
+   "filters": {
+    "categories": [
+     "status",
+     "typology"
+    ],
+    "ranges": [
+     "area",
+     "price-from",
+     "bedrooms"
+    ],
+    "search": true
+   }
+  }
+ ]
+}

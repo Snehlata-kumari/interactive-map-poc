@@ -5,7 +5,7 @@ import projectJson from "@/data/project.json";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: projectJson.name,
+  title: projectJson.name || "Interactive map",
   description: "Interactive map",
 };
 export const viewport: Viewport = {

@@ -83,8 +83,10 @@ for (const s of src.scenes) {
   });
 }
 
-// Keep the current file's data for everything that matches by id.
-const old = fs.existsSync(DATA) ? JSON.parse(fs.readFileSync(DATA, "utf8")) : null;
+// Keep the current file's data for everything that matches by id. An empty
+// project (the placeholder ensure-project writes) counts as none.
+const current = fs.existsSync(DATA) ? JSON.parse(fs.readFileSync(DATA, "utf8")) : null;
+const old = current?.scenes?.length ? current : null;
 const keep = (fresh, prev, geometry) => (prev ? { ...prev, ...Object.fromEntries(geometry.map((k) => [k, fresh[k]])), id: fresh.id } : fresh);
 const merged = scenes.map((s) => {
   const prev = old?.scenes?.find((p) => p.id === s.id);
@@ -96,7 +98,7 @@ const merged = scenes.map((s) => {
   };
 });
 const project = {
-  name: old?.name ?? src.title ?? name,
+  name: old?.name || src.title || name,
   rootScene: idOf[src.startScene] ?? merged[0].id,
   ...(old?.theme && { theme: old.theme }),
   categories: old?.categories ?? {},

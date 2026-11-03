@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "ensure-project": "node scripts/ensure-project.mjs",
+    "predev": "npm run ensure-project",
     "dev": "next dev",
+    "prebuild": "npm run ensure-project",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "pretype-check": "npm run ensure-project",
     "type-check": "tsc --noEmit",
     "import-editor": "node scripts/import-editor.mjs"
   },
