@@ -103,6 +103,12 @@ same id, only the geometry (points, image, size) is replaced. Titles,
 categories, values, filters and cards stay. The old file is saved as
 `data/project.previous.json`.
 
+**Starting empty.** If `data/project.json` is missing, `npm run dev`, `build`
+and `type-check` write an empty project first, and the site shows "No map data
+yet" instead of breaking. If `rootScene` isn't one of the scenes, the site says
+so. Importing into an empty project counts as a clean import. If you delete the
+file while `npm run dev` is running, restart it.
+
 **By hand.** Put the images in `public/<project>/` (WebP, around 4000 px wide)
 and write `data/project.json`. Points are percentages of the image:
 `x / imageWidth × 100`, `y / imageHeight × 100`.
