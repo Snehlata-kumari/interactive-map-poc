@@ -543,7 +543,20 @@
     4000,
     6000
    ],
-   "hotspotStyle": "outline",
+   "markers": [
+    {
+     "id": "A-001",
+     "point": [
+      47.23,
+      33.26
+     ],
+     "label": "Masterplan",
+     "link": "masterplan"
+    }
+   ],
+  
+ 
+   "hotspotStyle": "fill",
    "hotspots": [
     {
      "id": "A-001",
