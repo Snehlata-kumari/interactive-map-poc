@@ -92,8 +92,9 @@ npm run import-editor -- ~/Downloads/<project>.json
 ```
 
 - **Images:** saved as WebP (at most 4000 px wide) in `public/projects/<project>/`.
-- **Scenes:** each one's parent is the scene whose shape links to it, and its id
-  and title come from that shape's label.
+- **Scenes:** each one's parent is the scene whose shape links to it, and its title
+  is the editor's scene title and its id (URL) comes from the editor's scene id.
+  The start scene becomes `overview`, titled with the project title.
 - **Shapes:** polygons become hotspots and pins become markers.
 - **Plot details:** editor `details` keyed by a hotspot id become its
   status, typology, area and GFA.
