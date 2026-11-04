@@ -9,7 +9,7 @@
  * embedded as data URLs). Images are converted to WebP (≤ 4000 px wide).
  *
  * Mapping: scene → scene (parent = the scene whose shape links to it; id and
- * title from that shape's label); polygon → hotspot; pin → marker; lines are
+ * title from the editor's scene); polygon → hotspot; pin → marker; lines are
  * skipped. Editor `details` keyed by a hotspot id become its status / typology
  * and area / gfa.
  *
@@ -36,12 +36,12 @@ const name = slug(src.title || path.basename(file, ".json"));
 const outDir = path.join(ROOT, "public", "projects", name);
 fs.mkdirSync(outDir, { recursive: true });
 
-// Scene ids/titles from the label of the shape that opens them; parents from links.
-const parentOf = {}, labelOf = {};
-for (const s of src.scenes) for (const sh of s.shapes ?? []) if (sh.link) [parentOf[sh.link], labelOf[sh.link]] = [s.id, sh.label];
+// Scene ids/titles from the editor's scene (the start scene is the overview); parents from links.
+const parentOf = {};
+for (const s of src.scenes) for (const sh of s.shapes ?? []) if (sh.link) parentOf[sh.link] = s.id;
 const used = new Set();
 const idOf = Object.fromEntries(src.scenes.map((s) => {
-  let id = s.id === src.startScene ? "overview" : slug(labelOf[s.id] ?? s.title) || "scene";
+  let id = s.id === src.startScene ? "overview" : slug(s.id || s.title) || "scene";
   while (used.has(id)) id += "-2";
   used.add(id);
   return [s.id, id];
@@ -76,7 +76,7 @@ for (const s of src.scenes) {
   const markers = shapes.filter((sh) => sh.kind === "pin" && sh.points?.length).map((sh) => ({ id: sh.id, label: sh.label || sh.id, point: pct(sh.points)[0] }));
   scenes.push({
     id, ...(parentOf[s.id] && { parent: idOf[parentOf[s.id]] }),
-    title: s.id === src.startScene ? src.title || "Overview" : labelOf[s.id] ?? s.title,
+    title: s.id === src.startScene ? src.title || "Overview" : s.title || s.id,
     image: await saveImage(s.image, id), size: [s.width, s.height],
     ...(hotspots.length ? { hotspotStyle: "fill" } : { fit: "contain" }),
     ...(hotspots.length && { hotspots }), ...(markers.length && { markers }),
