@@ -1,13 +1,12 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import projectJson from "@/data/project.json";
 import { CONTENT_SOURCE, UNITS_REFRESH_MS } from "@/lib/config";
+import { LOCAL_PROJECT as LOCAL } from "@/lib/local-project";
 import { checkProject } from "@/lib/project";
 import type { Project, Unit } from "@/lib/schema";
 import { Spinner } from "./ui/spinner";
 
-const LOCAL = projectJson as unknown as Project;
 const ProjectContext = createContext<{ project: Project; units: Unit[] } | null>(null);
 
 export function useProject() {

@@ -6,6 +6,10 @@ phase → plot → floor plan. A new project is **new images + a new
 
 > **Not a developer?** Use [HANDOVER.md](HANDOVER.md): copy-paste prompts for
 > Claude Code that cover every task, from setup to swapping in a new project.
+>
+> **Developer docs** (one page, npm-package style): open `/documentation` on the
+> running site. Source: `app/documentation/page.tsx` + `components/docs/`. Keep it
+> in sync with this README.
 
 ```bash
 npm install
@@ -31,7 +35,10 @@ data/project.json ──┐                       ┌─ /api/project  (BFF: pro
 - **Shapes always come from `data/project.json`.** Points are `[x, y]` percentages
   (0–100) of the scene image, so they fit any screen.
 - **Text, images, icons and unit data can come from an API** (see *Content from an API*).
-- Every scene's URL is its parent chain: `/`, `/masterplan`, `/masterplan/phase-1`.
+- A scene's URL is the path you took to it: `/`, `/masterplan`, `/masterplan/phase-1`.
+  A scene linked from several places (one floor plan used by two buildings) keeps
+  the route you came by, so the breadcrumb and Back return the way you came.
+  `parent` is only the default route, for a scene opened directly.
 
 The shipped project ("New Project": World → India → Masterplan → Zone 1 →
 Building 1 → floors) is the SVG editor export of `new-project.json`, with
@@ -107,8 +114,10 @@ categories, values, filters and cards stay. The old file is saved as
 **Starting empty.** If `data/project.json` is missing, `npm run dev`, `build`
 and `type-check` write an empty project first, and the site shows "No map data
 yet" instead of breaking. If `rootScene` isn't one of the scenes, the site says
-so. Importing into an empty project counts as a clean import. If you delete the
-file while `npm run dev` is running, restart it.
+so. Importing into an empty project counts as a clean import. If you delete or
+move the file while `npm run dev` is running, an empty one is written again
+straight away. An empty or partial file (`{}`) also counts as an empty project.
+`/documentation` never reads `project.json`, so it always works.
 
 **By hand.** Put the images in `public/<project>/` (WebP, around 4000 px wide)
 and write `data/project.json`. Points are percentages of the image:

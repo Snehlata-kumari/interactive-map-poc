@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import { getScene, sceneFromPath } from "@/lib/project";
+import { chainFromPath, chainPath, getScene } from "@/lib/project";
 import { useProject } from "../project-provider";
 import { ProjectMessage } from "./project-message";
 import { SceneView } from "./scene-view";
@@ -29,13 +29,15 @@ export function SceneRoute({ segments }: { segments: string[] }) {
         <p>Set <code>rootScene</code> to the id of one of its scenes.</p>
       </ProjectMessage>
     );
-  const scene = sceneFromPath(project, segments);
-  if (!scene) notFound();
-  // Keyed per scene: a new scene starts with fresh zoom, filters and card.
+  const chain = chainFromPath(project, segments);
+  if (!chain) notFound();
+  const scene = chain.at(-1)!;
+  // Keyed per URL: a new scene (or the same one reached another way) starts
+  // with fresh zoom, filters and card.
   return (
     <>
       <title>{`${scene.title} · ${project.name}`}</title>
-      <SceneView key={scene.id} scene={scene} />
+      <SceneView key={chainPath(project, chain)} chain={chain} />
     </>
   );
 }

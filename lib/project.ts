@@ -3,7 +3,7 @@ import type { ContentPatch, Hotspot, Point, Project, Scene, Unit } from "./schem
 
 export const getScene = (p: Project, id: string) => p.scenes.find((s) => s.id === id);
 
-/** Root → scene, following `parent`. */
+/** Root → scene, following `parent`: the default path to a scene. */
 export function sceneChain(p: Project, scene: Scene): Scene[] {
   const chain: Scene[] = [];
   for (let s: Scene | undefined = scene; s && !chain.includes(s); s = s.parent ? getScene(p, s.parent) : undefined)
@@ -11,18 +11,42 @@ export function sceneChain(p: Project, scene: Scene): Scene[] {
   return chain;
 }
 
-/** URL of a scene: its chain's ids below the root (root = "/"). */
+/** URL of a chain (root → … → scene): its ids below the root (root = "/"). */
+export const chainPath = (p: Project, chain: Scene[]) =>
+  "/" + chain.map((s) => s.id).filter((id) => id !== p.rootScene).join("/");
+
+/** Default URL of a scene, through its `parent`s. */
 export function scenePath(p: Project, id: string): string {
   const scene = getScene(p, id);
-  if (!scene) return "/";
-  const ids = sceneChain(p, scene).map((s) => s.id).filter((s) => s !== p.rootScene);
-  return "/" + ids.join("/");
+  return scene ? chainPath(p, sceneChain(p, scene)) : "/";
 }
 
-/** The scene at a URL, or undefined (→ 404). */
-export function sceneFromPath(p: Project, segments: string[]): Scene | undefined {
-  const scene = getScene(p, segments.at(-1) ?? p.rootScene);
-  return scene && scenePath(p, scene.id) === "/" + segments.join("/") ? scene : undefined;
+/** Can `to` be opened from `from`? Its parent, or a hotspot / marker links to it.
+ *  A scene linked from several places (a shared floor plan) has several. */
+export const opensFrom = (from: Scene, to: Scene) =>
+  to.parent === from.id || !!from.hotspots?.some((h) => h.link === to.id) || !!from.markers?.some((m) => m.link === to.id);
+
+/** The chain a URL walks (root → … → scene), or undefined (→ 404). Each step
+ *  must open from the one before, so the URL keeps the path actually taken. */
+export function chainFromPath(p: Project, segments: string[]): Scene[] | undefined {
+  const root = getScene(p, p.rootScene);
+  if (!root) return undefined;
+  const chain = [root];
+  for (const id of segments) {
+    const next = getScene(p, id);
+    if (!next || chain.includes(next) || !opensFrom(chain.at(-1)!, next)) return undefined;
+    chain.push(next);
+  }
+  return chain;
+}
+
+/** Where a `link` from the end of `chain` goes: one level deeper, keeping the
+ *  path; back up if the target is already on the path. */
+export function linkPath(p: Project, chain: Scene[], link: string): string {
+  const at = chain.findIndex((s) => s.id === link);
+  if (at >= 0) return chainPath(p, chain.slice(0, at + 1));
+  const target = getScene(p, link);
+  return target ? chainPath(p, [...chain, target]) : "/";
 }
 
 export function centroid(points: Point[]): Point {
@@ -43,7 +67,7 @@ export function hotspotColor(p: Project, h: Hotspot, colorBy?: string): string {
 export function applyPatch(base: Project, patch: ContentPatch): Project {
   const p: Project = structuredClone(base);
   if (patch.project?.name) p.name = patch.project.name;
-  for (const s of p.scenes) {
+  for (const s of p.scenes ?? []) {
     Object.assign(s, defined(patch.scenes?.[s.id]));
     for (const h of s.hotspots ?? []) {
       const c = patch.hotspots?.[`${s.id}/${h.id}`];
@@ -77,10 +101,10 @@ const defined = <T extends object>(o: T | undefined) =>
 /** Mistakes in project.json, shown in the dev console. */
 export function checkProject(p: Project): string[] {
   const problems: string[] = [];
-  const ids = new Set(p.scenes.map((s) => s.id));
+  const ids = new Set((p.scenes ?? []).map((s) => s.id));
   const pct = (pt: Point) => pt.every((v) => typeof v === "number" && v >= 0 && v <= 100);
   if (!ids.has(p.rootScene)) problems.push(`rootScene "${p.rootScene}" is not a scene`);
-  for (const s of p.scenes) {
+  for (const s of p.scenes ?? []) {
     if (s.parent && !ids.has(s.parent)) problems.push(`scene "${s.id}": parent "${s.parent}" not found`);
     if (s.colorBy && !p.categories?.[s.colorBy]) problems.push(`scene "${s.id}": colorBy "${s.colorBy}" not a category`);
     for (const h of s.hotspots ?? []) {

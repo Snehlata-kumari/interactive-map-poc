@@ -1,6 +1,6 @@
 /**
  * Runs before dev / build / type-check. The app imports data/project.json, so
- * a missing file would break the build: write an empty project instead, and
+ * a missing (or blank) file would break the build: write an empty project instead, and
  * the UI shows "No map data yet". A file that isn't valid JSON stops here
  * with a readable message rather than a bundler stack trace.
  */
@@ -9,10 +9,10 @@ import path from "node:path";
 
 const DATA = path.resolve(import.meta.dirname, "..", "data", "project.json");
 
-if (!fs.existsSync(DATA)) {
+if (!fs.existsSync(DATA) || !fs.readFileSync(DATA, "utf8").trim()) {
   fs.mkdirSync(path.dirname(DATA), { recursive: true });
   fs.writeFileSync(DATA, JSON.stringify({ name: "", rootScene: "", scenes: [] }, null, 1) + "\n");
-  console.log("ℹ data/project.json was missing: wrote an empty project. Run npm run import-editor -- <backup.json> to add one.");
+  console.log("ℹ data/project.json was missing or blank: wrote an empty project. Run npm run import-editor -- <backup.json> to add one.");
 } else {
   try {
     JSON.parse(fs.readFileSync(DATA, "utf8"));

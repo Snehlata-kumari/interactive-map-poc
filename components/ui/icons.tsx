@@ -13,3 +13,6 @@ export const CloseIcon = () => <Svg><path d="M18 6 6 18M6 6l12 12" /></Svg>;
 export const FilterIcon = () => <Svg><path d="M3 5h18M6 12h12M10 19h4" /></Svg>;
 export const SearchIcon = () => <Svg><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></Svg>;
 export const ChevronIcon = () => <Svg width={14} height={14}><path d="m9 18 6-6-6-6" /></Svg>;
+export const MenuIcon = () => <Svg><path d="M4 6h16M4 12h16M4 18h16" /></Svg>;
+export const CopyIcon = () => <Svg width={14} height={14}><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></Svg>;
+export const CheckIcon = () => <Svg width={14} height={14}><path d="M20 6 9 17l-5-5" /></Svg>;

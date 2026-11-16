@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { EMPTY_FILTERS, matches, type FilterState } from "@/lib/filters";
-import { centroid, hotspotColor, scenePath, withUnits } from "@/lib/project";
+import { centroid, hotspotColor, linkPath, withUnits } from "@/lib/project";
 import type { Hotspot, Marker, Point, Scene } from "@/lib/schema";
 import { HotspotLayer } from "../map/hotspot-layer";
 import { MapStage, type StageApi } from "../map/map-stage";
@@ -36,7 +36,9 @@ const PlacementPanel = dynamic(
   { ssr: false },
 );
 
-export function SceneView({ scene }: { scene: Scene }) {
+/** `chain` = root → … → this scene, as the URL walked it. */
+export function SceneView({ chain }: { chain: Scene[] }) {
+  const scene = chain.at(-1)!;
   const { project, units } = useProject();
   const router = useRouter();
   const stage = useRef<StageApi | null>(null);
@@ -72,7 +74,7 @@ export function SceneView({ scene }: { scene: Scene }) {
     async ({ link, href, at }: Target) => {
       if (link) {
         await stage.current?.zoomTo(at, 3);
-        router.push(scenePath(project, link));
+        router.push(linkPath(project, chain, link));
       } else if (href) {
         if (/^https?:/.test(href)) window.open(href, "_blank", "noopener");
         else router.push(href);
@@ -82,7 +84,7 @@ export function SceneView({ scene }: { scene: Scene }) {
           Math.max(2.5, (stage.current?.view.scale ?? 1) * 1.6),
         );
     },
-    [project, router],
+    [project, chain, router],
   );
 
   const find = (id: string): (Hotspot | Marker) | undefined =>
@@ -192,7 +194,7 @@ export function SceneView({ scene }: { scene: Scene }) {
           {placing && <PlacementOverlay sceneId={scene.id} />}
         </MapStage>
 
-        <TopBar project={project} scene={scene} />
+        <TopBar project={project} chain={chain} />
         <div className="absolute end-4 top-4 z-10 flex gap-2">
           {hasFilters && (
             <Button className="md:hidden" onClick={() => setFiltersOpen(true)}>

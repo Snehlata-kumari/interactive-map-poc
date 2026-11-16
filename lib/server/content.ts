@@ -1,7 +1,7 @@
 import "server-only";
-import projectJson from "@/data/project.json";
+import { LOCAL_PROJECT } from "@/lib/local-project";
 import { applyPatch } from "@/lib/project";
-import type { ContentPatch, Project, Unit } from "@/lib/schema";
+import type { ContentPatch, Unit } from "@/lib/schema";
 import { cached, fetchJson } from "./upstream";
 
 /**
@@ -10,7 +10,7 @@ import { cached, fetchJson } from "./upstream";
  *   CONTENT_API_URL (+ CONTENT_API_TOKEN) → ContentPatch  (mock: data/mock-content.json)
  *   UNITS_API_URL   (+ UNITS_API_TOKEN)   → Unit[]        (mock: data/mock-units.json)
  */
-const BASE = projectJson as unknown as Project;
+const BASE = LOCAL_PROJECT;
 
 const isObject = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 

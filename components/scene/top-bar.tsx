@@ -2,19 +2,21 @@
 
 import Link from "next/link";
 import { Fragment } from "react";
-import { sceneChain, scenePath } from "@/lib/project";
+import { chainPath } from "@/lib/project";
 import type { Project, Scene } from "@/lib/schema";
 import { PANEL, cx } from "../ui";
 import { BackIcon, ChevronIcon } from "../ui/icons";
 
-/** Back button + breadcrumb (root → this scene). */
-export function TopBar({ project, scene }: { project: Project; scene: Scene }) {
-  const chain = sceneChain(project, scene);
+/** Back button + breadcrumb along the path the user took (root → this scene). */
+export function TopBar({ project, chain }: { project: Project; chain: Scene[] }) {
+  const scene = chain.at(-1);
   const parent = chain.at(-2);
+  /** URL of the i-th step: the path up to it. */
+  const pathTo = (i: number) => chainPath(project, chain.slice(0, i + 1));
   return (
     <div className="pointer-events-none absolute start-4 top-4 z-10 flex max-w-[calc(100%-10rem)] items-center gap-2 md:max-w-[calc(100%-5rem)]">
       {parent && (
-        <Link href={scenePath(project, parent.id)} aria-label={`Back to ${parent.title}`} className={cx(PANEL, "pointer-events-auto grid size-9 place-items-center rounded-control hover:bg-surface-muted")}>
+        <Link href={pathTo(chain.length - 2)} aria-label={`Back to ${parent.title}`} className={cx(PANEL, "pointer-events-auto grid size-9 place-items-center rounded-control hover:bg-surface-muted")}>
           <BackIcon />
         </Link>
       )}
@@ -28,7 +30,7 @@ export function TopBar({ project, scene }: { project: Project; scene: Scene }) {
                 {s === scene ? (
                   <span aria-current="page" className="font-semibold">{s.title}</span>
                 ) : (
-                  <Link href={scenePath(project, s.id)} className="text-ink-muted hover:text-ink">{s.title}</Link>
+                  <Link href={pathTo(i)} className="text-ink-muted hover:text-ink">{s.title}</Link>
                 )}
               </li>
             </Fragment>

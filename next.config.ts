@@ -1,4 +1,25 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { NextConfig } from "next";
+
+/** Dev only: if data/project.json is deleted or moved away while `next dev`
+ *  runs, write the empty project again (as scripts/ensure-project.mjs does
+ *  at start-up). Otherwise Turbopack's "Module not found" breaks every page,
+ *  /documentation included, until the dev server restarts. */
+if (process.env.NODE_ENV === "development") {
+  const dir = path.join(process.cwd(), "data");
+  const file = path.join(dir, "project.json");
+  const restore = () => {
+    if (fs.existsSync(file)) return;
+    fs.writeFileSync(file, JSON.stringify({ name: "", rootScene: "", scenes: [] }, null, 1) + "\n");
+    console.log("ℹ data/project.json was removed: wrote an empty project.");
+  };
+  try {
+    fs.watch(dir, (_, name) => name === "project.json" && restore());
+  } catch {
+    // No data/ folder to watch: ensure-project creates it on the next start.
+  }
+}
 
 /** Hosts allowed to serve images through next/image (content API images),
  *  comma-separated, e.g. IMAGE_HOSTS=images.ctfassets.net,cdn.example.com */
