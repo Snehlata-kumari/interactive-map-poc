@@ -15,12 +15,12 @@ export function Guides() {
             ["Polygon", "Hotspot"],
             ["Pin", "Marker"],
             ["Images", <>WebP (at most 4000 px wide) in <Code>public/projects/&lt;slug&gt;/</Code></>],
-            [<Code key="d">details</Code>, "Hotspot status, typology, area, GFA"],
+            [<Code key="d">details</Code>, <>Excel rows matched by id or label: status and typology (filters, colours), area / GFA / parking (sliders), other columns as card lines. Maps with data get <Code>colorBy</Code> and <Code>filters</Code>.</>],
           ]}
         />
         <Callout>
           <b>Re-importing is safe.</b> For matching ids only the geometry (points, image, size) is replaced; titles, data and cards are kept.
-          The old file is saved as <Code>data/project.previous.json</Code>.
+          The old file is saved as <Code>data/project.previous.json</Code>. The import prints how many Excel rows matched on each map.
         </Callout>
       </Section>
 

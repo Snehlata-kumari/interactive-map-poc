@@ -10,17 +10,25 @@
  *
  * Mapping: scene → scene (parent = the scene whose shape links to it; id and
  * title from the editor's scene); polygon → hotspot; pin → marker; lines are
- * skipped. Editor `details` keyed by a hotspot id become its status / typology
- * and area / gfa.
+ * skipped.
+ *
+ * Plot data: editor `details` (the Excel sheet loaded in the editor) are
+ * matched to a polygon by row key / hotspotId / plotLabel = shape id or label
+ * (any case), and become its status / typology, area / GFA / parking, and card
+ * lines for every other column (scripts/editor-details.mjs). Their categories
+ * and values are defined (status colours by default), and every map whose
+ * plots got data is coloured by status with filters, unless it has its own.
  *
  * Re-importing keeps your data: for every scene / hotspot / marker with the
  * same id, everything but the geometry (points, image, size) is kept from the
- * current data/project.json, as are its categories, values and theme. The old
- * file is saved as data/project.previous.json.
+ * current data/project.json, as are its categories, values and theme. A plot
+ * with an editor row takes that row's data; card lines you added stay. The old
+ * file is saved as data/project.previous.json. A report lists what matched.
  */
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { definitions, findRow, indexDetails, plotData, sceneFilters, slug } from "./editor-details.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const DATA = path.join(ROOT, "data", "project.json");
@@ -31,7 +39,6 @@ if (!file) fail("Usage: npm run import-editor -- <editor-backup.json>");
 const src = JSON.parse(fs.readFileSync(file, "utf8"));
 if (!Array.isArray(src.scenes)) fail("Not an editor project (no scenes).");
 
-const slug = (s) => String(s).toLowerCase().replace(/([a-z])(\d)/g, "$1-$2").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const name = slug(src.title || path.basename(file, ".json"));
 const outDir = path.join(ROOT, "public", "projects", name);
 fs.mkdirSync(outDir, { recursive: true });
@@ -57,22 +64,26 @@ async function saveImage(ref, sceneId) {
 }
 
 const pct = (pts) => pts.map(([x, y]) => [Math.round(x * 100) / 100, Math.round(y * 100) / 100]);
-const details = src.details ?? {};
-const fromDetails = (d) => d && {
-  categories: Object.fromEntries([["status", d.status && slug(d.status)], ["typology", d.mdTypology && slug(d.mdTypology)]].filter(([, v]) => v)),
-  values: Object.fromEntries([["area", d.mdPlotArea], ["gfa", d.gfa]].filter(([, v]) => typeof v === "number")),
-};
+const rowIndex = indexDetails(src.details);
+const dataOf = new Map(); // "sceneId/hotspotId" → plotData(row)
+const usedRows = new Map(); // row key → row
 
 const scenes = [];
 for (const s of src.scenes) {
   const id = idOf[s.id];
   const shapes = s.shapes ?? [];
-  const hotspots = shapes.filter((sh) => sh.kind === "polygon" && sh.points?.length >= 3).map((sh) => ({
-    id: sh.id, label: sh.label || sh.id, points: pct(sh.points),
-    ...(sh.link && idOf[sh.link] && { link: idOf[sh.link] }),
-    ...(sh.url && { href: sh.url }),
-    ...fromDetails(details[sh.id]),
-  }));
+  const hotspots = shapes.filter((sh) => sh.kind === "polygon" && sh.points?.length >= 3).map((sh) => {
+    const hit = findRow(rowIndex, sh);
+    if (hit) {
+      dataOf.set(`${id}/${sh.id}`, plotData(hit.row));
+      usedRows.set(hit.key, hit.row);
+    }
+    return {
+      id: sh.id, label: sh.label || sh.id, points: pct(sh.points),
+      ...(sh.link && idOf[sh.link] && { link: idOf[sh.link] }),
+      ...(sh.url && { href: sh.url }),
+    };
+  });
   const markers = shapes.filter((sh) => sh.kind === "pin" && sh.points?.length).map((sh) => ({ id: sh.id, label: sh.label || sh.id, point: pct(sh.points)[0] }));
   scenes.push({
     id, ...(parentOf[s.id] && { parent: idOf[parentOf[s.id]] }),
@@ -88,25 +99,53 @@ for (const s of src.scenes) {
 const current = fs.existsSync(DATA) ? JSON.parse(fs.readFileSync(DATA, "utf8")) : null;
 const old = current?.scenes?.length ? current : null;
 const keep = (fresh, prev, geometry) => (prev ? { ...prev, ...Object.fromEntries(geometry.map((k) => [k, fresh[k]])), id: fresh.id } : fresh);
+/** A plot's editor row over its kept data: categories / values replaced per
+ *  field, card lines replaced per label (other lines stay). */
+const withData = (h, d) => {
+  if (!d) return h;
+  const rows = [...(h.info?.rows ?? []).filter((r) => !d.rows.some((n) => n.label === r.label)), ...d.rows];
+  return {
+    ...h,
+    ...(Object.keys(d.categories).length && { categories: { ...h.categories, ...d.categories } }),
+    ...(Object.keys(d.values).length && { values: { ...h.values, ...d.values } }),
+    ...(rows.length && { info: { ...h.info, rows } }),
+  };
+};
 const merged = scenes.map((s) => {
   const prev = old?.scenes?.find((p) => p.id === s.id);
   const byId = (list, k) => new Map((list ?? []).map((x) => [x.id, x])).get(k);
   return {
     ...keep(s, prev, ["image", "size", "parent"]),
-    ...(s.hotspots && { hotspots: s.hotspots.map((h) => keep(h, byId(prev?.hotspots, h.id), ["points", "link"])) }),
+    ...(s.hotspots && { hotspots: s.hotspots.map((h) => withData(keep(h, byId(prev?.hotspots, h.id), ["points", "link"]), dataOf.get(`${s.id}/${h.id}`))) }),
     ...(s.markers && { markers: s.markers.map((m) => keep(m, byId(prev?.markers, m.id), ["point"])) }),
   };
 });
+const hadData = (s) => !!old?.scenes?.find((p) => p.id === s.id)?.hotspots?.some((h) => h.categories || h.values);
+const matchedIn = (s) => (s.hotspots ?? []).filter((h) => dataOf.has(`${s.id}/${h.id}`)).length;
+const defs = definitions([...usedRows.values()], old ?? {});
 const project = {
   name: old?.name || src.title || name,
   rootScene: idOf[src.startScene] ?? merged[0].id,
   ...(old?.theme && { theme: old.theme }),
-  categories: old?.categories ?? {},
-  values: old?.values ?? {},
-  scenes: merged,
+  ...defs,
+  // Filters are set up once: on maps whose plots got editor data now and had
+  // none before. Filters you changed or removed later stay as you left them.
+  scenes: merged.map((s) => (matchedIn(s) && !hadData(s) ? { ...s, ...sceneFilters(s) } : s)),
 };
 
 if (old) fs.copyFileSync(DATA, path.join(ROOT, "data", "project.previous.json"));
 fs.writeFileSync(DATA, JSON.stringify(project, null, 1) + "\n");
 const count = (k) => merged.reduce((n, s) => n + (s[k]?.length ?? 0), 0);
 console.log(`✔ ${merged.length} scenes, ${count("hotspots")} hotspots, ${count("markers")} markers → data/project.json, images → public/projects/${name}/`);
+
+// What came through from the editor's details, so nothing is assumed.
+const rows = Object.keys(src.details ?? {});
+if (rows.length) {
+  console.log(`  details: ${usedRows.size} of ${rows.length} rows matched a plot`);
+  for (const s of project.scenes) if (s.hotspots?.length) console.log(`    ${s.title}: ${matchedIn(s)} of ${s.hotspots.length} plots got data${s.filters ? " · filters on" : ""}`);
+  const unmatched = rows.filter((k) => !usedRows.has(k));
+  if (unmatched.length)
+    console.warn(`⚠ ${unmatched.length} rows match no plot (e.g. ${unmatched.slice(0, 3).join(", ")}). A row matches when its key, hotspotId or plotLabel equals a shape's id or label.`);
+  if (!usedRows.size) console.warn("⚠ No plot got data: check the row keys against the shape ids/labels in the editor.");
+} else console.log("  details: none in the backup (plots have no status, numbers or card lines)");
+if (src.categories?.length) console.log(`  editor colour labels (${src.categories.length}) are not imported: statuses come from the details.`);

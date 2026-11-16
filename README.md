@@ -103,12 +103,21 @@ npm run import-editor -- ~/Downloads/<project>.json
   is the editor's scene title and its id (URL) comes from the editor's scene id.
   The start scene becomes `overview`, titled with the project title.
 - **Shapes:** polygons become hotspots and pins become markers.
-- **Plot details:** editor `details` keyed by a hotspot id become its
-  status, typology, area and GFA.
+- **Plot details:** the Excel sheet loaded in the editor (`details`) is matched
+  to plots: a row matches when its key, `hotspotId` or `plotLabel` equals the
+  shape's id or label (any case). Status and typology become filterable
+  categories (status gets default colours), plot area / GFA / parking become
+  numbers with range filters, and every other column becomes a line on the
+  plot's card. Each map whose plots got data is coloured by status and gets
+  filters and search. The import prints how many rows matched on each map, and
+  lists rows that matched nothing. The editor's own colour labels aren't imported.
 
 **Re-importing keeps your data.** For every scene, hotspot and marker with the
-same id, only the geometry (points, image, size) is replaced. Titles,
-categories, values, filters and cards stay. The old file is saved as
+same id, only the geometry (points, image, size) is replaced. Titles, colours,
+filters and cards stay. A plot with an Excel row in the editor takes that
+row's values (status, numbers, card lines); card lines you added yourself stay.
+Filters are only set up on a map the first time its plots get data, so filters
+you changed later are left alone. The old file is saved as
 `data/project.previous.json`.
 
 **Starting empty.** If `data/project.json` is missing, `npm run dev`, `build`

@@ -107,9 +107,19 @@ export function checkProject(p: Project): string[] {
   for (const s of p.scenes ?? []) {
     if (s.parent && !ids.has(s.parent)) problems.push(`scene "${s.id}": parent "${s.parent}" not found`);
     if (s.colorBy && !p.categories?.[s.colorBy]) problems.push(`scene "${s.id}": colorBy "${s.colorBy}" not a category`);
+    for (const c of s.filters?.categories ?? []) if (!p.categories?.[c]) problems.push(`scene "${s.id}": filter "${c}" not a category`);
+    for (const v of s.filters?.ranges ?? []) if (!p.values?.[v]) problems.push(`scene "${s.id}": range filter "${v}" not a value`);
     for (const h of s.hotspots ?? []) {
       if (h.points.length < 3 || !h.points.every(pct)) problems.push(`${s.id}/${h.id}: needs ≥3 points in 0–100`);
       if (h.link && !ids.has(h.link)) problems.push(`${s.id}/${h.id}: link "${h.link}" not a scene`);
+      // Unknown categories / options / values are silently ignored by the
+      // filters, colours and card, so flag them here.
+      for (const [c, v] of Object.entries(h.categories ?? {})) {
+        const category = p.categories?.[c];
+        if (!category) problems.push(`${s.id}/${h.id}: category "${c}" not defined in categories`);
+        else if (!category.options.some((o) => o.value === v)) problems.push(`${s.id}/${h.id}: ${c} "${v}" not one of its options`);
+      }
+      for (const v of Object.keys(h.values ?? {})) if (!p.values?.[v]) problems.push(`${s.id}/${h.id}: value "${v}" not defined in values`);
     }
     for (const m of s.markers ?? []) if (!pct(m.point)) problems.push(`${s.id}/${m.id}: point not in 0–100`);
   }

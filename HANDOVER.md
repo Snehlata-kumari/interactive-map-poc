@@ -48,16 +48,20 @@ A new project usually comes as **two files**:
 
 | File | What it holds | Example |
 | --- | --- | --- |
-| **SVG-editor backup** (`.json`) | the map images, the plot shapes, the links between maps | `new-project.json` |
+| **SVG-editor backup** (`.json`) | the map images, the plot shapes, the links between maps, and the Excel plot details if you loaded the sheet in the editor | `new-project.json` |
 | **Excel sheet** (`.xlsx`) | the plot details: status, type, area, price, bedrooms… | `new-project-plot-details.xlsx` |
 
 Do steps **2A → 2E in order**, one prompt at a time. Each step ends with a
 check, so a problem shows up at the step that caused it.
 
-> **Why the steps are separate:** the import (2B) only brings in the shapes and
-> images. It does **not** set up statuses, colours, filters or prices. Those
-> come from the Excel sheet in 2C and 2D. Until then the plots show **grey**.
-> That's expected, not a bug.
+> **Excel loaded in the editor (easiest):** the import (2B) then also brings in
+> the statuses, colours, numbers, filters and card details, and reports how many
+> plots got data on each map. If every plot map got its data, **skip 2C and 2D**
+> and go to 2E.
+>
+> **Excel not in the editor, or rows that didn't match:** the import brings in
+> only shapes and images, and those plots show **grey**. That's expected. The
+> data then comes from the Excel sheet in 2C and 2D.
 
 ### 2A. Look at the files first (changes nothing)
 
@@ -97,16 +101,26 @@ Now set up the new project from the SVG-editor backup at <path to the .json file
 2. Run npm run import-editor with the backup.
 3. Tell me in plain words: how many maps, plots and pins were imported, and
    whether that matches what you found in step 2A.
-4. Start the site and give me the link. I'll check I can click from the first
-   map down to every other map. (The plots will be grey for now.)
-Don't add any statuses, colours or Excel data yet.
+4. Show me the import's "details" report: for each map, how many plots got
+   data from the Excel rows in the backup, and which rows matched no plot.
+   If rows didn't match, explain why (sheet id vs plot id or label) with a few
+   examples.
+5. Start the site and give me the link. I'll check I can click from the first
+   map down to every other map, and that plots with data are coloured.
+Don't add or change any data yourself yet.
 ```
 
 **Check:** click through every map on the site. If a map is missing, a link
 goes to the wrong place or an image is wrong, tell Claude now (or ask the
 designer for a corrected backup). Don't continue until the maps are right.
 
+**Then:** if every plot map got its data, go to **2E**. If rows didn't match,
+the easiest fix is in the editor: give each Excel row the plot's id or label,
+download the backup again and repeat 2B. Otherwise continue with 2C.
+
 ### 2C. Plan how the Excel columns are used (changes nothing)
+
+*Only when the Excel data didn't come in with the import in 2B.*
 
 ```
 Now plan how to bring in the Excel sheet at <path to the .xlsx file>.
@@ -188,8 +202,10 @@ apply it without touching any shapes, and show me the result on the site.
 
 ### 3b. The designer changed the shapes (new SVG-editor backup, same project)
 
-Use this when it's the **same project** with corrected or extra shapes. It keeps
-all your statuses, prices and cards. **Don't archive first.**
+Use this when it's the **same project** with corrected or extra shapes, or an
+updated Excel sheet loaded in the editor. It keeps your colours, filters and the
+card lines you added. Plots with an Excel row in the backup take that row's
+status, numbers and details. **Don't archive first.**
 
 ```
 The designer sent an updated SVG-editor backup of the SAME project at
@@ -226,6 +242,68 @@ Add a pin called "<label>" on the <map name> map at <describe where, or
 give x/y in percent of the image>, with this description: "<text>".
 ```
 
+## 5b. Filters, colours and details cards
+
+**How it works, in plain words.** A filter shows up on a map only when three
+things agree:
+
+1. **The project knows the choice and its options**, e.g. Status: Available
+   (green), Booked (orange), Sold (red).
+2. **The map is told to show a filter for it**, e.g. CITY3 shows Status and
+   Typology filters, and from–to sliders for Plot area and GFA.
+3. **Each plot has a value that is exactly one of those options**, e.g. plot
+   c3-A-001 is "available".
+
+Good to know:
+
+- The checkboxes list **every option**, with the number of plots on that map next to each.
+- Ticking two options of the same filter shows plots with **either** one. Ticking
+  options in different filters shows plots that match **all** of them.
+- Plots that don't match **fade out**. They don't disappear.
+- **Colours and the legend** are set separately ("colour this map by status"), so a
+  map can have colours without filters.
+- **A spelling difference breaks the match.** "Sold" is not "sold". Such a plot
+  shows grey, has no status on its card, and vanishes as soon as you tick a
+  status. Claude's check (Prompt 7) lists these mistakes.
+- **Clicking a plot** opens its **card** when it has any details (status,
+  numbers or card text). Otherwise it goes straight into the next map. The
+  card's **Explore** button goes into the next map.
+
+**Change the filters or colours on a map**
+
+```
+On the <map name, e.g. CITY3> map: show filters for <e.g. status and typology>,
+from–to sliders for <e.g. plot area and price>, and <keep / remove> the search box.
+Colour the plots by <e.g. status>. Before changing anything, tell me if any
+plot on that map has a value that isn't one of the options, or has no value.
+Then show me the result on the site.
+```
+
+**Add a new choice that you can filter by** (e.g. facade, view)
+
+```
+Add a new filter "<name, e.g. View>" with these options: <e.g. Park, Road, Pool>.
+Take each plot's value from <the Excel column "View" / this list: …>.
+Show it as a filter on <map names>. List the plots that end up with no value
+or a value that isn't one of the options, and wait for my OK before applying.
+```
+
+**Change what a plot's card shows**
+
+```
+On the <map name> map, change the card of <plot id or name / every plot>:
+<e.g. add the picture <path to image>, the subtitle "Phase 1", the description
+"…", a line "View: Park", and a button "Brochure" that opens <link>>.
+```
+
+**Change what a click does**
+
+```
+On the <map name> map, clicking <plot id or name / every plot> should
+<open its card first / go straight into the next map without a card>.
+Tell me what has to change for that and wait for my OK.
+```
+
 ## 6. Line up plots drawn in Figma/Illustrator (Align SVG)
 
 Use this when you only have images and an SVG of the plots, not an SVG-editor
@@ -245,7 +323,8 @@ and help me give them proper ids and labels.
 Check the project is ready to hand over:
 1. Run lint, type-check and build.
 2. List any data problems in project.json (wrong links, points outside the
-   image, missing images, plots on coloured maps without a status).
+   image, missing images, plots on coloured maps without a status, values
+   that aren't one of the options, filters for choices that don't exist).
 3. Start the site and tell me which pages to click through to check it myself.
 Explain any problem in plain words and offer to fix it.
 ```
@@ -278,6 +357,7 @@ Undo everything you changed since my last save.
 | --- | --- | --- |
 | All plots grey | No statuses or colours yet, or `colorBy` not set on that map | *"Plots on <map> are grey. Check categories, colorBy and that the plots have a status."* |
 | Some plots grey | Those rows didn't match (different id) | *"List the plots on <map> without a status and the Excel rows that matched nothing."* |
+| A plot is grey, has no status on its card, or vanishes when you filter | Its value isn't one of the options (e.g. "Sold" vs "sold") | *"Check the console problems for <map> and fix the plot values to match the options."* |
 | No filter button | The map has no `filters` | *"Turn on filters for status and area on <map>."* |
 | Old project's data shows up | `project.json` wasn't archived before importing | *"Undo the import, archive project.json properly, and import again (step 2B)."* |
 | "No map data yet" or "The map can't be shown" | Empty project or wrong start map | *"Why does the site say there's no map? Check rootScene and the scenes."* |
@@ -297,6 +377,8 @@ Start the site so I can check it.
 
 The prompts rely on `CLAUDE.md` (the rules Claude follows) and `README.md`
 (the data format). If you change how projects are imported, update the
-prompts here too. Section 2 assumes the importer brings in only shapes,
-images and links (plus editor `details` when present), and that Excel data
-is mapped by hand after a confirmed plan.
+prompts here too. Section 2 assumes the importer brings in shapes,
+images and links, plus the Excel data loaded in the editor (`details`, see
+`scripts/editor-details.mjs`): plot data, definitions, colours and filters,
+with a match report. An Excel sheet that isn't in the editor is mapped by hand
+after a confirmed plan (2C, 2D).
