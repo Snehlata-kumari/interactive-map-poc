@@ -15,7 +15,7 @@
     "import-editor": "node scripts/import-editor.mjs"
   },
   "dependencies": {
-    "next": "16.3.5",
+    "next": "^16.4.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "server-only": "^0.0.1"
@@ -26,7 +26,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.5",
+    "eslint-config-next": "^16.4.6",
     "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5"
